@@ -1,0 +1,39 @@
+-- SQLDelight schema for pickups, drivers, vendors
+CREATE TABLE vendors (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  address TEXT
+);
+
+CREATE TABLE drivers (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  vehicle_id TEXT,
+  online INTEGER NOT NULL DEFAULT 0,
+  last_lat REAL,
+  last_lon REAL
+);
+
+CREATE TABLE pickups (
+  id TEXT NOT NULL PRIMARY KEY,
+  vendor_id TEXT NOT NULL REFERENCES vendors(id),
+  time_window_start TEXT NOT NULL,
+  time_window_end TEXT NOT NULL,
+  location_lat REAL NOT NULL,
+  location_lon REAL NOT NULL,
+  status TEXT NOT NULL
+);
+
+CREATE TABLE packages (
+  id TEXT NOT NULL PRIMARY KEY,
+  pickup_id TEXT NOT NULL REFERENCES pickups(id),
+  weight_kg REAL,
+  length_cm REAL,
+  width_cm REAL,
+  height_cm REAL,
+  category TEXT
+);
+
+-- Sample query
+selectPendingPickups:
+SELECT * FROM pickups WHERE status = 'PENDING';
